@@ -1,43 +1,21 @@
 # Must See Movies Associations
 
-## Getting Started Video
-
-There is a Getting Started video on Canvas that walks you through much of the below; however, it's a bit out of date so you need to remember the following as you watch it:
-
- - Whenever I say `starter_generators`, replace it in your mind with `draft_generators`. This is the new and improved gem that we're using now, which includes Bootstrap version 4 and other niceties.
- - Whenver I say `starter:resource`, imagine I said `draft:resource` instead.
- - Whenver I say `starter:style`, imagine I said `draft:layout` instead.
-
 ## Objective
 
 In this project, we'll practice associating rows from different tables to one another.
 
 ### Here is [our target](https://msm-associations-target.herokuapp.com/).
 
-(Don't worry about styling -- focus on functionality only. Also, ignore the pagination links at the bottom of the characters index -- but think about how you would go about it if you had to.)
+(Don't worry about styling -- focus on functionality only.)
 
 ## Setup
 
- 1. Download this project to your Cloud9 workspace as usual (`git clone ...`).
+ 1. Clone this project to your Cloud9 workspace as usual
  1. `bin/setup`
- 1. `bin/server`
- 1. Navigate to the app preview in Chrome and verify that it's a brand new, blank app.
+ 1. Click the Run Project button
+ 1. Navigate to the app preview in Chrome and verify that it works. You should see a functional version of the movies index page.
  1. I've already added the [draft_generators](https://guides.firstdraft.com/draftgenerators.html) gem to the `Gemfile` for you, but you might want to go read that Guide to get an overview of what it does for us.
- 1. Let's use the gem to generate the Director resource with the following command at a new terminal prompt:
-
-    ```
-    rails generate draft:resource director name:string dob:string bio:text image_url:string
-    ```
-
- 1. `rails db:migrate` to actually execute the instructions you just generated to create a new table.
- 1. Navigate to `/directors` in your live app and verify that the CRUD resource boilerplate was generated properly. Presto!
- 1. You could add a few directors yourself manually using the generated Golden Seven. Or, quickly add a few rows to the directors table with a script that I included:
-
-    ```
-    rails dev:prime:directors
-    ```
-
- 1. `rails grade:all` won't work until after you've generated all four resources as described below (directors, movies, characters, actors). Until then, just work towards making your app match the target (in functionality, not style).
+ 1. Run `rails grade:all` as you go to check your progress
  1. If at any point `rails grade:all` fails with the message "Migrations are pending. To resolve this issue, run: bin/rake db:migrate RAILS_ENV=test" then run
 
         rails db:migrate RAILS_ENV=test
@@ -67,36 +45,26 @@ We could add a column called "director_name", but that's not very reliable becau
 
 Instead, we usually store the ID number of the row in the other table that we want to associate to, which is guaranteed by the database never to change or be duplicated. We can always use the ID number to look up the rest of the details.
 
-So, let's now generate the Movie resource with all of the columns it needs:
+So, let's now update the Movie resource with all of the columns it needs:
 
 ```
-rails generate draft:resource movie title:string year:integer duration:integer description:text image_url:string director_id:integer
+rails generate migration add_director_id_to_movies director_id:integer
 ```
+
+Open up the `db/migrate` folder in your application and open up the last file. See if you can make sense of the instructions. When we run `rails db:migrate`, this set of instructions runs to makes changes in the database structure. Specifically, this migration adds a new column called `director_id` to the movies table.
 
 The `director_id` column is intended to hold the `id` of a row from over in the directors table. Such columns are called **foreign key columns**.
 
-Execute the newly generated instructions to add the movies table:
+Execute the newly generated instructions to update the movies table:
 
 ```
 rails db:migrate
 ```
 
-Quickly add a few rows to the movies table:
+Reset the database to include movies that have an included `director_id`:
 
 ```
-rails dev:prime:movies
-```
-
-Now might also be a good time to set the `MoviesController` `index` action as our homepage, which we can do in `config/routes.rb` with:
-
-```ruby
-get("/", { :controller => "movies", :action => "index" })
-```
-
-or, the following convenient shorthand for setting a homepage:
-
-```ruby
-root("movies#index")
+rails dev:prime_associated_directors
 ```
 
 ### Validations
@@ -134,11 +102,7 @@ For each question, see if you can craft a single Ruby expression that returns th
 
 ### Improving the generated boilerplate views
 
- 1. You can use the included `rails generate draft:layout` generator to quickly write a much better application layout file, with `<link>`s to Bootstrap, Font Awesome, a navbar, notices, and more.
-
-    When you run this command, it will warn you that it's about to overwrite the existing application layout — say `y`. Refresh the page, and voila! A beautiful new look.
-
- 1. Currently, on the movies index page and a movie's show page, the code that the generator wrote for you is showing users raw director ID numbers. This is bad. Replace the id number with the name of the director.
+ 1. Currently, on the movies index page and a movie's show page, the code we started with is showing users raw director ID numbers. This is bad. Replace the id number with the name of the director.
  1. On the new and edit movie pages, let's give our users a dropdown box to select a director, rather than having to type in a valid ID number. Let's use the `select_tag` view helper method to make this slightly easier than writing the raw HTML `<select>` and `<option>` tags by hand:
 
     ```erb
@@ -148,25 +112,13 @@ For each question, see if you can craft a single Ruby expression that returns th
  1. Let's also add a link to the new director form in case the director doesn't exist yet.
  1. On a director's show page, display a count of how many movies belong to that director.
  1. On a director's show page, display a list of the movies that belong to that director.
- 1. At the bottom of the list of movies, write a form to add a new movie directly to that director (without having to go to http://localhost:3000/movies/new). You can start by copying over the boilerplate new movie form, and then modify it to pre-populate the `director_id` input with the correct value. Finally, switch the `type` of the input to "hidden".
+ 1. At the bottom of the list of movies, write a form to add a new movie directly to that director (without having to go to "/movies/new"). You can start by copying over the boilerplate new movie form, and then modify it to pre-populate the `director_id` input with the correct value. Finally, switch the `type` of the input to "hidden".
 
 **The above are all extremely common steps that you will want to go through for almost every One-to-Many that you ever build.**
 
 ## Associating Movies and Actors
 
-Let's now add Actors to our application. Our end goal is to show a cast on each movie's show page, and a filmography on each actor's show page.
-
-```
-rails generate draft:resource actor name:string dob:string bio:text image_url:string
-```
-
-Then `rails db:migrate` as usual and and navigate to `/actors` and verify that the CRUD resource boilerplate was generated properly.
-
-Then, quickly add a few rows:
-
-```
-rails dev:prime:actors
-```
+Our end goal is to show a cast on each movie's show page, and a filmography on each actor's show page.
 
 ### Can X have many of Y? Can Y have many of X?
 
@@ -198,7 +150,7 @@ rails generate draft:resource character movie_id:integer actor_id:integer name:s
 `rails db:migrate` as usual and navigate to `/characters` and verify that the CRUD resource boilerplate was generated properly. Then, add a few rows:
 
 ```
-rails dev:prime:characters
+rails dev:prime_characters
 ```
 
 (This might take a minute.)
@@ -234,7 +186,7 @@ So, we should first go through the steps we went through above when we were sett
 1. Let's also add a link to the new movie form in case the movie doesn't exist yet.
 1. On a movie's show page, display a count of how many characters belong to that movie.
 1. On a movie's show page, display a list of the characters that belong to that movie.
-1. At the bottom of the list of characters, write a form to add a new character directly to that movie (without having to go to http://localhost:3000/characters/new). You can start by copying over the boilerplate new character form, and then modify it to pre-populate the `movie_id` input with the correct value. Finally, switch the `type` of the input to "hidden".
+1. At the bottom of the list of characters, write a form to add a new character directly to that movie (without having to go to "/characters/new"). You can start by copying over the boilerplate new character form, and then modify it to pre-populate the `movie_id` input with the correct value. Finally, switch the `type` of the input to "hidden".
 
 Do the same steps for the one-to-many relationship between actors and characters.
 
