@@ -85,7 +85,7 @@ describe "/actors/[ACTOR ID]" do
     actors.each do |actor|
       visit "/actors/#{actor.id}"
       characters = Character.where(actor_id: actor.id)
-      actor.characters.each do |character|
+      characters.each do |character|
         movie = Movie.find_by(id: character.movie_id)
         expect(page).to have_content(movie.title)
       end
