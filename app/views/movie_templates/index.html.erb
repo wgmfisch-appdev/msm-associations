@@ -59,7 +59,9 @@
       <%= movie.description %>
     </td>
     <td>
-      <%= movie.director_id %>
+      <a href="/directors/<%= movie.director_id%>">
+        <%= Director.find(movie.director_id).name %>
+      </a>
     </td>
     <td>
       <a href="/movies/<%= movie.id %>" class="btn btn-primary">

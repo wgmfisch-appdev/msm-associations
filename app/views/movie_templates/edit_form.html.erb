@@ -47,7 +47,8 @@
       Director
     </label>
 
-    <textarea id="director" name="director_id" class="form-control" rows="3"><%= @movie.director_id %></textarea>
+    <%= select_tag("director_id", options_from_collection_for_select(Director.all, :id, :name, @movie.try(:director_id)), :class => "form-control") %>
+
   </div>
 
   <!-- Label and input for image_url -->

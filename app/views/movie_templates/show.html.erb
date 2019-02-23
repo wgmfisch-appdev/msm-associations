@@ -41,7 +41,9 @@
     Director
   </dt>
   <dd>
-    <%= @movie.director_id %>
+    <a href="/directors/<%= @movie.director_id%>">
+      <%= Director.find(@movie.director_id).name %>
+    </a>
   </dd>
 
   <dt>
