@@ -23,9 +23,16 @@ class MoviesController < ApplicationController
     @movie.duration = params.fetch("duration")
     @movie.description = params.fetch("description")
     @movie.image_url = params.fetch("image_url")
-    @movie.save
+    @movie.director_id = params.fetch("director_id")
+    
+    if @movie.valid?
+      @movie.save
+      redirect_to("/movies", :notice => "Movie created successfully.")
+    else
+      render("movie_templates/new_form.html.erb")
+    end
 
-    redirect_to("/movies", :notice => "Movie created successfully.")
+    
   end
 
   def edit_form
@@ -42,9 +49,16 @@ class MoviesController < ApplicationController
     @movie.duration = params.fetch("duration")
     @movie.description = params.fetch("description")
     @movie.image_url = params.fetch("image_url")
-    @movie.save
+    @movie.director_id = params.fetch("director_id")
+    
+    if @movie.valid?
+      @movie.save
+      redirect_to("/movies/#{@movie.id}", :notice => "Movie updated successfully.")
+    else
+      render("movie_templates/edit_form.html.erb")
+    end
 
-    redirect_to("/movies/#{@movie.id}", :notice => "Movie updated successfully.")
+    
   end
 
   def destroy_row

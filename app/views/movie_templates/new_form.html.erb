@@ -1,3 +1,11 @@
+<% if @movie.present? %>
+  <% @movie.errors.full_messages.each do |message| %>
+    <div>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
 <h1>
   Add a new movie
 </h1>
@@ -39,6 +47,13 @@
     </label>
 
     <textarea id="description" name="description" class="form-control" rows="3"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="director">
+      Director
+    </label>
+    <textarea id="director" name="director_id" class="form-control" rows="3"></textarea>
   </div>
 
   <!-- Label and input for image_url -->
