@@ -12,4 +12,9 @@
 #
 
 class Actor < ApplicationRecord
+  validates :name, presence: true
+  validates :name, uniqueness: {
+    scope: :dob,
+    message: "this is only a message"
+  }
 end
