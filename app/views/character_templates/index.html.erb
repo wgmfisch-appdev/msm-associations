@@ -34,14 +34,6 @@
         </th>
 
         <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
         </th>
       </tr>
 
@@ -52,22 +44,19 @@
         </td>
 
         <td>
-          <%= character.movie_id %>
+          <a href="/movies/<%= character.movie_id %>">
+            <%= Movie.find(character.movie_id).title %>
+          </a>
         </td>
 
         <td>
-          <%= character.actor_id %>
+          <a href="/actors/<%= character.actor_id %>">
+            <%= Actor.find(character.actor_id).name %>
+          </a>
         </td>
 
         <td>
           <%= character.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(character.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(character.updated_at) %> ago
         </td>
 
         <td>

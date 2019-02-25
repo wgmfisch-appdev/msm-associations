@@ -28,36 +28,22 @@
       <dt>
         Movie
       </dt>
-      <dd>
-        <%= @character.movie_id %>
-      </dd>
+      <a href="/movies/<%= @character.movie_id %>">
+        <%= Movie.find(@character.movie_id).title %>
+      </a>
 
       <dt>
         Actor
       </dt>
-      <dd>
-        <%= @character.actor_id %>
-      </dd>
+      <a href="/actors/<%= @character.actor_id %>">
+        <%= Actor.find(@character.actor_id).name %>
+      </a>
 
       <dt>
         Name
       </dt>
       <dd>
         <%= @character.name %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@character.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@character.updated_at) %> ago
       </dd>
     </dl>
   </div>
