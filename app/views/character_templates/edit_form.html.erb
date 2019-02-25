@@ -12,6 +12,7 @@
     </label>
 
     <%= select_tag("movie_id", options_from_collection_for_select(Movie.all, :id, :title, @character.try(:movie_id)), :class => "form-control") %>
+    or <a href="/movies/new">Add a New Movie</a> first
   </div>
 
   <div class="form-group">
@@ -20,6 +21,7 @@
     </label>
 
     <%= select_tag("actor_id", options_from_collection_for_select(Actor.all, :id, :name, @character.try(:actor_id)), :class => "form-control") %>
+    or <a href="/actors/new">Add a New Actor</a> first
   </div>
 
   <div class="form-group">

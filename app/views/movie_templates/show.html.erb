@@ -52,6 +52,13 @@
   <dd>
     <img src="<%= @movie.image_url %>" width="320">
   </dd>
+  
+  <dt>
+    Number of Characters
+  </dt>
+  <dd>
+    <%= Character.where(movie_id: @movie.id).count %>
+  </dd>
 
 </dl>
 
@@ -64,3 +71,54 @@
 <a href="/movies">
   Go back
 </a>
+
+
+<div class="card mt-4">
+  <div class="card-header">
+    Cast
+  </div>
+  <ul class="list-group list-group-flush">
+    <% Character.where(movie_id: @movie.id).each do |character| %>
+      <li class="list-group-item">
+        <a href="/character/<%= character.id%>">
+          <%= character.name %>
+        </a>
+        
+      </li>
+    <% end %>
+  </ul>
+  <div class="card-header">
+    Add New Character for this movie
+  </div>
+  <ul>
+    <li>
+      <form action="/create_character" method="post" >
+        <!-- Label and input for title -->
+        <div class="form-group">
+          <label for="name">
+            Name
+          </label>
+      
+          <input type="text" id="name" name="name" class="form-control">
+        </div>
+      
+        <!-- Label and input for year -->
+        <div class="form-group">
+          <label for="actor_id">
+            Actor
+          </label>
+      
+          <%= select_tag("actor_id", options_from_collection_for_select(Actor.all, :id, :name, @character.try(:actor_id)), :class => "form-control") %>
+          or <a href="/actors/new">Add a New Actor</a> first
+        </div>
+      
+
+        <input type="hidden" name="movie_id" value="<%= @movie.id %>"></input>
+        
+        <button class="btn btn-block btn-outline-secondary">
+          Create character
+        </button>
+      </form>
+    </li>
+  </ul>
+</div>
